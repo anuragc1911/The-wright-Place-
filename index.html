@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>The Wright Place — An Exclusive Preview</title>
+<meta name="description" content="An exclusive preview for a chosen few. The Wright Place — Luxury in the North. 800+ units inside the 3000+ acre KIADB Aerospace Park. Fairlark | GRC." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --orange:#e07b45;
+    --orange-deep:#d06f3b;
+    --cream:#f6ebdd;
+    --cream-soft:#f9f1e7;
+    --ink:#3d2a1d;
+    --ink-soft:#4a3324;
+    --accent:#e07b45;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; font-style:normal !important; }
+  html{ scroll-behavior:smooth; }
+  body{
+    font-family:'Poppins',system-ui,-apple-system,sans-serif;
+    background:var(--orange);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+
+  /* ---------- SNAP SCROLL SHELL ---------- */
+  .shell{
+    height:100dvh;
+    overflow-y:auto;
+    scroll-snap-type:y mandatory;
+    scrollbar-width:none;
+  }
+  .shell::-webkit-scrollbar{ display:none; }
+  .panel{ scroll-snap-align:start; }
+
+  /* ---------- POSTER ---------- */
+  .poster{
+    min-height:100dvh;
+    background:var(--orange);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:22px 18px;
+    position:relative;
+  }
+  .card{
+    position:relative;
+    width:min(430px,92vw);
+    background:var(--cream);
+    border-radius:34px;
+    padding:44px 34px 0;
+    overflow:hidden;
+    box-shadow:0 40px 80px -30px rgba(78,40,15,.45);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    min-height:min(88dvh,880px);
+  }
+
+  .headline{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:clamp(30px,7.4vw,40px);
+    line-height:1.06;
+    text-align:center;
+    color:var(--ink);
+    letter-spacing:-.01em;
+  }
+  .rule{
+    width:78px; height:2px;
+    background:var(--orange);
+    margin:20px auto 18px;
+    opacity:.85;
+  }
+  .sub{
+    text-align:center;
+    color:var(--orange-deep);
+    font-weight:500;
+    font-size:clamp(15px,3.9vw,17px);
+    line-height:1.42;
+    max-width:78%;
+  }
+
+  /* big background plane */
+  .plane-big{
+    width:118%;
+    margin:8px 0 -6px;
+    display:block;
+    color:var(--orange);
+  }
+
+  .codename{
+    letter-spacing:.34em;
+    font-size:12px;
+    font-weight:600;
+    color:var(--ink);
+    margin-top:2px;
+  }
+  .mark{ width:70px; margin:14px 0 20px; color:var(--orange); }
+
+  .brand{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    color:var(--ink);
+    text-align:center;
+    letter-spacing:.16em;
+    font-size:clamp(30px,7vw,40px);
+    line-height:1.12;
+  }
+  .tagline{
+    margin-top:16px;
+    color:var(--orange-deep);
+    letter-spacing:.22em;
+    font-weight:600;
+    font-size:13px;
+    text-transform:uppercase;
+  }
+
+  .divider{
+    width:82%;
+    height:1px;
+    background:rgba(61,42,29,.22);
+    margin:22px 0 18px;
+  }
+  .stats{
+    text-align:center;
+    line-height:1.35;
+    margin-bottom:26px;
+  }
+  .stats .row{ display:flex; align-items:baseline; justify-content:center; gap:10px; }
+  .stats .num{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:clamp(26px,6vw,32px);
+    color:var(--ink);
+    min-width:104px;
+    text-align:right;
+  }
+  .stats .txt{
+    font-weight:500;
+    font-size:clamp(14px,3.6vw,16px);
+    color:var(--ink-soft);
+    text-align:left;
+  }
+
+  .footer-pill{
+    margin-top:auto;
+    background:var(--orange);
+    color:var(--cream);
+    width:calc(100% + 68px);
+    margin-left:-34px; margin-right:-34px;
+    padding:20px 0 26px;
+    border-top-left-radius:26px;
+    border-top-right-radius:26px;
+    text-align:center;
+    font-weight:500;
+    letter-spacing:.14em;
+    font-size:18px;
+  }
+  .footer-pill b{ font-weight:600; }
+  .footer-pill .divider-v{ opacity:.6; margin:0 8px; font-weight:300; }
+
+  /* swipe-up hint pinned to poster */
+  .hint{
+    position:absolute;
+    left:50%; bottom:16px;
+    transform:translateX(-50%);
+    display:flex; flex-direction:column; align-items:center; gap:5px;
+    color:var(--cream);
+    font-size:11.5px; letter-spacing:.28em; text-transform:uppercase;
+    font-weight:500;
+    opacity:.92;
+    animation:floaty 1.9s ease-in-out infinite;
+    pointer-events:none;
+    z-index:5;
+  }
+  .hint svg{ width:20px; height:20px; }
+  @keyframes floaty{ 0%,100%{ transform:translate(-50%,0);} 50%{ transform:translate(-50%,-7px);} }
+
+  /* ---------- CTA PANEL ---------- */
+  .cta{
+    min-height:100dvh;
+    background:
+      radial-gradient(120% 90% at 50% -10%, #e88a55 0%, var(--orange) 46%, var(--orange-deep) 100%);
+    display:flex; align-items:center; justify-content:center;
+    padding:40px 20px calc(40px + env(safe-area-inset-bottom));
+    position:relative;
+  }
+  .glass{
+    width:min(430px,92vw);
+    background:linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
+    border:1px solid rgba(255,255,255,.28);
+    border-radius:30px;
+    padding:40px 30px 34px;
+    backdrop-filter:blur(18px) saturate(140%);
+    -webkit-backdrop-filter:blur(18px) saturate(140%);
+    box-shadow:0 30px 70px -30px rgba(60,28,8,.6);
+    text-align:center;
+    color:var(--cream);
+  }
+  .glass .eyebrow{
+    letter-spacing:.34em; font-size:11.5px; text-transform:uppercase;
+    color:rgba(255,244,234,.85); font-weight:600; margin-bottom:14px;
+  }
+  .glass h2{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:clamp(26px,6.4vw,34px);
+    line-height:1.1;
+    color:#fff;
+    letter-spacing:-.01em;
+  }
+  .glass p{
+    margin-top:12px;
+    font-size:14.5px; line-height:1.5;
+    color:rgba(255,246,238,.9);
+    font-weight:400;
+  }
+  form{ margin-top:26px; display:flex; flex-direction:column; gap:12px; }
+  .field{
+    width:100%;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.3);
+    border-radius:14px;
+    padding:15px 16px;
+    color:#fff;
+    font-family:inherit;
+    font-size:15px;
+    font-weight:400;
+    outline:none;
+    transition:border-color .2s, background .2s;
+  }
+  .field::placeholder{ color:rgba(255,246,238,.68); }
+  .field:focus{ border-color:#fff; background:rgba(255,255,255,.2); }
+  .submit{
+    margin-top:4px;
+    background:var(--cream);
+    color:var(--orange-deep);
+    border:none;
+    border-radius:14px;
+    padding:16px;
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:16px;
+    letter-spacing:.04em;
+    cursor:pointer;
+    transition:transform .15s, box-shadow .2s, background .2s;
+    box-shadow:0 12px 26px -12px rgba(0,0,0,.5);
+  }
+  .submit:hover{ transform:translateY(-2px); box-shadow:0 18px 34px -14px rgba(0,0,0,.55); }
+  .submit:active{ transform:translateY(0); }
+  .fineprint{
+    margin-top:16px; font-size:11.5px; letter-spacing:.06em;
+    color:rgba(255,246,238,.72); font-weight:400;
+  }
+  .thanks{
+    display:none;
+    margin-top:24px;
+    font-family:'Fraunces',serif;
+    font-size:18px; color:#fff; line-height:1.4;
+  }
+  .thanks.show{ display:block; }
+  form.hide{ display:none; }
+
+  .backtop{
+    position:absolute; top:22px; left:50%; transform:translateX(-50%);
+    color:rgba(255,246,238,.9); font-size:11px; letter-spacing:.26em;
+    text-transform:uppercase; text-decoration:none; font-weight:500;
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+  }
+  .backtop svg{ width:18px; height:18px; }
+</style>
+</head>
+<body>
+<div class="shell" id="shell">
+
+  <!-- ============ POSTER ============ -->
+  <section class="panel poster" id="poster">
+    <div class="card">
+      <h1 class="headline">An Exclusive Preview<br />for a Chosen Few</h1>
+      <div class="rule"></div>
+      <p class="sub">Invest in North Bangalore's most promising project, ahead of everyone else.</p>
+
+      <!-- big Wright flyer silhouette -->
+      <svg class="plane-big" viewBox="0 0 400 300" fill="none" aria-hidden="true">
+        <g fill="currentColor">
+          <!-- upper wing -->
+          <path d="M40 176 L360 96 C368 94 372 100 366 106 L52 196 C44 199 36 191 40 176 Z"/>
+          <!-- lower wing -->
+          <path d="M52 236 L372 156 C380 154 384 160 378 166 L64 256 C56 259 48 251 52 236 Z"/>
+          <!-- struts -->
+          <rect x="120" y="150" width="3" height="70" transform="rotate(-14 120 150)"/>
+          <rect x="180" y="134" width="3" height="70" transform="rotate(-14 180 134)"/>
+          <rect x="240" y="118" width="3" height="70" transform="rotate(-14 240 118)"/>
+          <rect x="300" y="102" width="3" height="70" transform="rotate(-14 300 102)"/>
+          <!-- diagonal bracing lines -->
+          <path d="M124 156 L182 198 M184 140 L242 182 M244 124 L302 166" stroke="currentColor" stroke-width="2"/>
+          <!-- rudder / tail box -->
+          <path d="M330 210 L360 202 L360 250 L330 258 Z" opacity=".92"/>
+          <rect x="326" y="212" width="2.5" height="46"/>
+          <rect x="358" y="203" width="2.5" height="46"/>
+        </g>
+      </svg>
+
+      <div class="codename">CODE NAME</div>
+      <!-- small mark -->
+      <svg class="mark" viewBox="0 0 120 70" fill="currentColor" aria-hidden="true">
+        <path d="M8 30 L112 12 C116 11 118 15 114 18 L14 42 C10 43 6 37 8 30 Z"/>
+        <path d="M14 52 L118 34 C122 33 124 37 120 40 L22 62 C18 63 14 57 14 52 Z"/>
+        <rect x="46" y="26" width="2.6" height="24" transform="rotate(-10 46 26)"/>
+        <rect x="72" y="21" width="2.6" height="24" transform="rotate(-10 72 21)"/>
+      </svg>
+
+      <div class="brand">The<br />Wright<br />Place</div>
+      <div class="tagline">Luxury in the North</div>
+
+      <div class="divider"></div>
+      <div class="stats">
+        <div class="row"><span class="num">800+</span><span class="txt">units right inside the</span></div>
+        <div class="row"><span class="num">3000+</span><span class="txt">Acre KIADB Aerospace Park</span></div>
+      </div>
+
+      <div class="footer-pill"><b>Fairlark</b><span class="divider-v">|</span><b>GRC</b></div>
+    </div>
+
+    <div class="hint" id="hint">
+      <span>Swipe up</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+    </div>
+  </section>
+
+  <!-- ============ CTA ============ -->
+  <section class="panel cta" id="cta">
+    <a class="backtop" href="#poster">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
+      Back
+    </a>
+
+    <div class="glass">
+      <div class="eyebrow">Private Invitation</div>
+      <h2>Be among the chosen few.</h2>
+      <p>Register now for a priority preview of The Wright Place — early access, preferred pricing, and the first pick of homes inside the KIADB Aerospace Park.</p>
+
+      <form id="regForm" novalidate>
+        <input class="field" type="text" name="name" placeholder="Full name" autocomplete="name" required />
+        <input class="field" type="tel" name="phone" placeholder="Phone number" autocomplete="tel" required />
+        <input class="field" type="email" name="email" placeholder="Email address" autocomplete="email" />
+        <button class="submit" type="submit">Request Your Invitation</button>
+      </form>
+      <div class="thanks" id="thanks">Thank you. Our team will reach out with your private preview details shortly.</div>
+
+      <div class="fineprint">Limited previews. By invitation only.</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  // hide the swipe hint once the user scrolls into the CTA
+  const shell = document.getElementById('shell');
+  const hint = document.getElementById('hint');
+  shell.addEventListener('scroll', () => {
+    hint.style.opacity = shell.scrollTop > 60 ? '0' : '.92';
+  }, { passive:true });
+
+  // graceful form handoff (no backend yet)
+  const form = document.getElementById('regForm');
+  const thanks = document.getElementById('thanks');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!form.name.value.trim() || !form.phone.value.trim()) {
+      (form.name.value.trim() ? form.phone : form.name).focus();
+      return;
+    }
+    form.classList.add('hide');
+    thanks.classList.add('show');
+  });
+</script>
+</body>
+</html>
