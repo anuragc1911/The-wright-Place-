@@ -7,7 +7,7 @@
 <meta name="description" content="An exclusive preview for a chosen few. The Wright Place — Luxury in the North. 800+ units inside the 3000+ acre KIADB Aerospace Park. Fairlark | GRC." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
   :root{
     --orange:#e07b45;
@@ -17,6 +17,8 @@
     --ink:#3d2a1d;
     --ink-soft:#4a3324;
     --accent:#e07b45;
+    --orange-text:#b95b28;   /* AA-safe orange for text on cream */
+    --danger:#ffd9c2;
   }
   *{ margin:0; padding:0; box-sizing:border-box; font-style:normal !important; }
   html{ scroll-behavior:smooth; }
@@ -81,7 +83,7 @@
   }
   .sub{
     text-align:center;
-    color:var(--orange-deep);
+    color:var(--orange-text);
     font-weight:500;
     font-size:clamp(15px,3.9vw,17px);
     line-height:1.42;
@@ -109,17 +111,18 @@
   .mark{ width:64px; margin:clamp(8px,1.4vh,14px) 0 clamp(12px,1.8vh,20px); color:var(--orange); }
 
   .brand{
-    font-family:'Fraunces',serif;
+    font-family:'Cinzel',serif;
     font-weight:700;
     color:var(--ink);
     text-align:center;
-    letter-spacing:.16em;
-    font-size:clamp(28px,6.4vw,36px);
-    line-height:1.08;
+    letter-spacing:.06em;
+    font-size:clamp(28px,6.6vw,37px);
+    line-height:1.12;
+    text-transform:uppercase;
   }
   .tagline{
     margin-top:clamp(10px,1.8vh,16px);
-    color:var(--orange-deep);
+    color:var(--orange-text);
     letter-spacing:.22em;
     font-weight:600;
     font-size:13px;
@@ -278,7 +281,48 @@
     text-transform:uppercase; text-decoration:none; font-weight:500;
     display:flex; flex-direction:column; align-items:center; gap:4px;
   }
+  .backtop{ padding:8px 14px; min-height:44px; touch-action:manipulation; }
   .backtop svg{ width:18px; height:18px; }
+
+  /* field wrapper + inline validation */
+  .fieldwrap{ text-align:left; }
+  .field{ touch-action:manipulation; }
+  .field.invalid{ border-color:var(--danger); background:rgba(255,120,60,.16); }
+  .err{
+    display:none;
+    margin:6px 4px 0;
+    font-size:12px; font-weight:500; line-height:1.3;
+    color:var(--danger);
+    letter-spacing:.01em;
+  }
+  .err.show{ display:block; }
+  .visually-hidden{
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+    overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+  }
+  .submit{ touch-action:manipulation; }
+  .submit[disabled]{ opacity:.75; cursor:progress; }
+  .spinner{
+    width:16px; height:16px; border-radius:50%;
+    border:2px solid rgba(176,86,40,.35); border-top-color:var(--orange-deep);
+    display:inline-block; vertical-align:-3px; margin-right:8px;
+    animation:spin .7s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  /* visible keyboard focus */
+  a:focus-visible, button:focus-visible, .field:focus-visible{
+    outline:2px solid #fff;
+    outline-offset:2px;
+    border-radius:12px;
+  }
+
+  /* respect reduced-motion */
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.001ms !important; animation-iteration-count:1 !important;
+       transition-duration:.001ms !important; scroll-behavior:auto !important; }
+    html{ scroll-behavior:auto; }
+  }
 </style>
 </head>
 <body>
@@ -352,12 +396,27 @@
       <p>Register now for a priority preview of The Wright Place — early access, preferred pricing, and the first pick of homes inside the KIADB Aerospace Park.</p>
 
       <form id="regForm" novalidate>
-        <input class="field" type="text" name="name" placeholder="Full name" autocomplete="name" required />
-        <input class="field" type="tel" name="phone" placeholder="Phone number" autocomplete="tel" required />
-        <input class="field" type="email" name="email" placeholder="Email address" autocomplete="email" />
-        <button class="submit" type="submit">Request Your Invitation</button>
+        <div class="fieldwrap">
+          <label class="visually-hidden" for="f-name">Full name (required)</label>
+          <input class="field" id="f-name" type="text" name="name" placeholder="Full name"
+                 autocomplete="name" required aria-required="true" aria-describedby="e-name" />
+          <p class="err" id="e-name" role="alert">Please enter your name.</p>
+        </div>
+        <div class="fieldwrap">
+          <label class="visually-hidden" for="f-phone">Phone number (required)</label>
+          <input class="field" id="f-phone" type="tel" name="phone" placeholder="Phone number"
+                 inputmode="tel" autocomplete="tel" required aria-required="true" aria-describedby="e-phone" />
+          <p class="err" id="e-phone" role="alert">Please enter a valid phone number.</p>
+        </div>
+        <div class="fieldwrap">
+          <label class="visually-hidden" for="f-email">Email address</label>
+          <input class="field" id="f-email" type="email" name="email" placeholder="Email address"
+                 inputmode="email" autocomplete="email" aria-describedby="e-email" />
+          <p class="err" id="e-email" role="alert">Please enter a valid email address.</p>
+        </div>
+        <button class="submit" type="submit" id="submitBtn">Request Your Invitation</button>
       </form>
-      <div class="thanks" id="thanks">Thank you. Our team will reach out with your private preview details shortly.</div>
+      <div class="thanks" id="thanks" role="status" aria-live="polite">Thank you. Our team will reach out with your private preview details shortly.</div>
 
       <div class="fineprint">Limited previews. By invitation only.</div>
     </div>
@@ -373,17 +432,48 @@
     hint.style.opacity = shell.scrollTop > 60 ? '0' : '.92';
   }, { passive:true });
 
-  // graceful form handoff (no backend yet)
+  // graceful form handoff (no backend yet) with inline validation + submit feedback
   const form = document.getElementById('regForm');
   const thanks = document.getElementById('thanks');
+  const btn = document.getElementById('submitBtn');
+  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const phoneRe = /[0-9]{7,}/;
+
+  function validate(field){
+    const v = field.value.trim();
+    let ok = true;
+    if (field.name === 'name')  ok = v.length > 0;
+    if (field.name === 'phone') ok = phoneRe.test(v.replace(/[^0-9]/g,''));
+    if (field.name === 'email') ok = v === '' || emailRe.test(v); // optional
+    const err = document.getElementById('e-' + field.name);
+    field.classList.toggle('invalid', !ok);
+    field.setAttribute('aria-invalid', String(!ok));
+    if (err) err.classList.toggle('show', !ok);
+    return ok;
+  }
+
+  // validate on blur — not on every keystroke
+  ['name','phone','email'].forEach(n => {
+    form[n].addEventListener('blur', () => validate(form[n]));
+    form[n].addEventListener('input', () => {
+      if (form[n].classList.contains('invalid')) validate(form[n]);
+    });
+  });
+
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    if (!form.name.value.trim() || !form.phone.value.trim()) {
-      (form.name.value.trim() ? form.phone : form.name).focus();
-      return;
-    }
-    form.classList.add('hide');
-    thanks.classList.add('show');
+    const fields = ['name','phone','email'].map(n => form[n]);
+    const results = fields.map(validate);
+    const firstBad = fields.find((f,i) => !results[i]);
+    if (firstBad){ firstBad.focus(); return; }
+
+    // loading -> success feedback
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner" aria-hidden="true"></span>Sending…';
+    setTimeout(() => {
+      form.classList.add('hide');
+      thanks.classList.add('show');
+    }, 900);
   });
 </script>
 </body>
