@@ -45,38 +45,23 @@
     overflow-x:hidden;
   }
 
-  /* ---------- SNAP SCROLL SHELL ---------- */
-  .shell{
+  /* ---------- SINGLE-SCREEN STAGE (no scrolling) ---------- */
+  .stage{
     height:100dvh;
-    overflow-y:auto;
-    scroll-snap-type:y mandatory;
-    scrollbar-width:none;
-  }
-  .shell::-webkit-scrollbar{ display:none; }
-  .panel{ scroll-snap-align:start; }
-
-  /* ---------- POSTER ---------- */
-  .poster{
-    min-height:100dvh;
-    background:#e88148;              /* exact artwork orange — blends the letterbox */
     display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:0;
-    position:relative;
+    flex-direction:column;
+    background:#e88148;              /* exact poster terracotta */
     overflow:hidden;
+    padding-top:env(safe-area-inset-top);
   }
-  /* the real vector artwork, scaled to fill the screen exactly (no cropping) */
+  /* the real vector artwork — fills the top, whole poster visible, nudged up */
   .poster-art{
-    display:block;
+    flex:1 1 auto;
+    min-height:0;
     width:100%;
-    height:100dvh;
-    object-fit:cover;               /* fill the screen; only the orange side-margin is trimmed */
-    object-position:center;
-  }
-  /* on wide/short screens contain avoids over-cropping the poster */
-  @media (min-aspect-ratio:3/4){
-    .poster-art{ object-fit:contain; }
+    object-fit:contain;
+    object-position:center top;
+    display:block;
   }
   .card{
     position:relative;
@@ -222,108 +207,84 @@
   @keyframes floaty{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-6px);} }
 
   /* ---------- CTA PANEL ---------- */
+  /* ---------- BOTTOM CTA (pinned to the base, poster's own palette) ---------- */
   .cta{
-    min-height:100dvh;
-    background:
-      radial-gradient(120% 90% at 50% -10%, #e88a55 0%, var(--orange) 46%, var(--orange-deep) 100%);
-    display:flex; align-items:center; justify-content:center;
-    padding:40px 20px calc(40px + env(safe-area-inset-bottom));
-    position:relative;
-  }
-  .glass{
-    width:min(430px,92vw);
-    background:linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
-    border:1px solid rgba(255,255,255,.28);
-    border-radius:30px;
-    padding:40px 30px 34px;
-    backdrop-filter:blur(18px) saturate(140%);
-    -webkit-backdrop-filter:blur(18px) saturate(140%);
-    box-shadow:0 30px 70px -30px rgba(60,28,8,.6);
+    flex:0 0 auto;
+    background:#e88148;                 /* exact poster terracotta */
+    padding:14px 24px calc(20px + env(safe-area-inset-bottom));
     text-align:center;
-    color:var(--cream);
+    color:var(--ink);
   }
+  .glass{ width:100%; max-width:430px; margin:0 auto; }
   .glass .eyebrow{
-    letter-spacing:.34em; font-size:11.5px; text-transform:uppercase;
-    color:rgba(255,244,234,.85); font-weight:600; margin-bottom:14px;
+    letter-spacing:.3em; font-size:10.5px; text-transform:uppercase;
+    color:var(--ink); opacity:.72; font-weight:600; margin-bottom:6px;
   }
   .glass h2{
     font-family:'Bodoni 72 Oldstyle','Bodoni Moda',Georgia,serif;
     font-weight:400;
-    font-size:clamp(26px,6.4vw,34px);
+    font-size:clamp(22px,6vw,28px);
     line-height:1.1;
-    color:#fff;
-    letter-spacing:-.01em;
+    color:var(--ink);
+    letter-spacing:0;
   }
-  .glass p{
-    margin-top:12px;
-    font-size:14.5px; line-height:1.5;
-    color:rgba(255,246,238,.9);
-    font-weight:400;
-  }
-  form{ margin-top:26px; display:flex; flex-direction:column; gap:12px; }
+  .glass .rule2{ display:none; }
+  .glass p{ display:none; }              /* keep the base compact — no scroll */
+  form{ margin-top:12px; display:flex; flex-direction:column; gap:9px; }
   .field{
     width:100%;
-    background:rgba(255,255,255,.14);
-    border:1px solid rgba(255,255,255,.3);
-    border-radius:14px;
-    padding:15px 16px;
-    color:#fff;
+    background:var(--cream);
+    border:1px solid rgba(61,42,29,.18);
+    border-radius:12px;
+    padding:12px 15px;
+    color:var(--ink);
     font-family:inherit;
     font-size:15px;
     font-weight:400;
     outline:none;
-    transition:border-color .2s, background .2s;
+    transition:border-color .2s, box-shadow .2s;
   }
-  .field::placeholder{ color:rgba(255,246,238,.68); }
-  .field:focus{ border-color:#fff; background:rgba(255,255,255,.2); }
+  .field::placeholder{ color:rgba(61,42,29,.5); }
+  .field:focus{ border-color:var(--ink); box-shadow:0 0 0 3px rgba(61,42,29,.12); }
   .submit{
-    margin-top:4px;
-    background:var(--cream);
-    color:var(--orange-deep);
+    margin-top:3px;
+    background:var(--ink);
+    color:var(--cream);
     border:none;
-    border-radius:14px;
-    padding:16px;
+    border-radius:12px;
+    padding:14px;
     font-family:'Bodoni 72 Oldstyle','Bodoni Moda',Georgia,serif;
     font-weight:700;
     font-size:17px;
     letter-spacing:.04em;
     cursor:pointer;
     transition:transform .15s, box-shadow .2s, background .2s;
-    box-shadow:0 12px 26px -12px rgba(0,0,0,.5);
+    box-shadow:0 12px 26px -14px rgba(40,20,6,.6);
   }
-  .submit:hover{ transform:translateY(-2px); box-shadow:0 18px 34px -14px rgba(0,0,0,.55); }
+  .submit:hover{ transform:translateY(-2px); box-shadow:0 18px 34px -16px rgba(40,20,6,.65); }
   .submit:active{ transform:translateY(0); }
   .fineprint{
-    margin-top:16px; font-size:11.5px; letter-spacing:.06em;
-    color:rgba(255,246,238,.72); font-weight:400;
+    margin-top:9px; font-size:11px; letter-spacing:.05em;
+    color:var(--ink); opacity:.66; font-weight:500;
   }
   .thanks{
     display:none;
-    margin-top:24px;
+    padding:14px 0 6px;
     font-family:'Bodoni 72 Oldstyle','Bodoni Moda',Georgia,serif;
-    font-size:19px; color:#fff; line-height:1.45;
+    font-size:19px; color:var(--ink); line-height:1.4;
   }
   .thanks.show{ display:block; }
   form.hide{ display:none; }
 
-  .backtop{
-    position:absolute; top:22px; left:50%; transform:translateX(-50%);
-    color:rgba(255,246,238,.9); font-size:11px; letter-spacing:.26em;
-    text-transform:uppercase; text-decoration:none; font-weight:500;
-    display:flex; flex-direction:column; align-items:center; gap:4px;
-  }
-  .backtop{ padding:8px 14px; min-height:44px; touch-action:manipulation; }
-  .backtop svg{ width:18px; height:18px; }
-
   /* field wrapper + inline validation */
   .fieldwrap{ text-align:left; }
   .field{ touch-action:manipulation; }
-  .field.invalid{ border-color:var(--danger); background:rgba(255,120,60,.16); }
+  .field.invalid{ border-color:#8f2f10; box-shadow:0 0 0 3px rgba(143,47,16,.14); }
   .err{
     display:none;
-    margin:6px 4px 0;
-    font-size:12px; font-weight:500; line-height:1.3;
-    color:var(--danger);
+    margin:4px 4px 0;
+    font-size:11.5px; font-weight:600; line-height:1.3;
+    color:#7a2a0e;
     letter-spacing:.01em;
   }
   .err.show{ display:block; }
@@ -335,7 +296,7 @@
   .submit[disabled]{ opacity:.75; cursor:progress; }
   .spinner{
     width:16px; height:16px; border-radius:50%;
-    border:2px solid rgba(176,86,40,.35); border-top-color:var(--orange-deep);
+    border:2px solid rgba(246,235,221,.35); border-top-color:var(--cream);
     display:inline-block; vertical-align:-3px; margin-right:8px;
     animation:spin .7s linear infinite;
   }
@@ -343,7 +304,7 @@
 
   /* visible keyboard focus */
   a:focus-visible, button:focus-visible, .field:focus-visible{
-    outline:2px solid #fff;
+    outline:2px solid var(--ink);
     outline-offset:2px;
     border-radius:12px;
   }
@@ -357,30 +318,17 @@
 </style>
 </head>
 <body>
-<div class="shell" id="shell">
+<div class="stage">
 
-  <!-- ============ POSTER (exact vector artwork from the GRC/KIADB .ai) ============ -->
-  <section class="panel poster" id="poster">
-    <img class="poster-art" src="hero.svg"
-         alt="An Exclusive Preview for a Chosen Few — The Wright Place, Luxury in the North. 800+ homes right inside the 3000+ acre KIADB Aerospace & IT Park. Fairlark | GRC." />
+  <!-- exact vector artwork from the GRC/KIADB .ai — nudged to the top -->
+  <img class="poster-art" src="hero.svg"
+       alt="An Exclusive Preview for a Chosen Few — The Wright Place, Luxury in the North. 800+ homes right inside the 3000+ acre KIADB Aerospace & IT Park. Fairlark | GRC." />
 
-    <div class="hint" id="hint">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
-      <span>Swipe up</span>
-    </div>
-  </section>
-
-  <!-- ============ CTA ============ -->
-  <section class="panel cta" id="cta">
-    <a class="backtop" href="#poster">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
-      Back
-    </a>
-
+  <!-- CTA pinned to the bottom of the same screen -->
+  <section class="cta" id="cta">
     <div class="glass">
       <div class="eyebrow">Private Invitation</div>
       <h2>Be among the chosen few.</h2>
-      <p>Register now for a priority preview of The Wright Place — early access, preferred pricing, and the first pick of homes inside the KIADB Aerospace Park.</p>
 
       <form id="regForm" novalidate>
         <div class="fieldwrap">
@@ -412,13 +360,6 @@
 </div>
 
 <script>
-  // hide the swipe hint once the user scrolls into the CTA
-  const shell = document.getElementById('shell');
-  const hint = document.getElementById('hint');
-  shell.addEventListener('scroll', () => {
-    hint.style.opacity = shell.scrollTop > 60 ? '0' : '.92';
-  }, { passive:true });
-
   // graceful form handoff (no backend yet) with inline validation + submit feedback
   const form = document.getElementById('regForm');
   const thanks = document.getElementById('thanks');
