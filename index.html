@@ -58,12 +58,25 @@
   /* ---------- POSTER ---------- */
   .poster{
     min-height:100dvh;
-    background:var(--orange);
+    background:#e88148;              /* exact artwork orange — blends the letterbox */
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:14px 16px;
+    padding:0;
     position:relative;
+    overflow:hidden;
+  }
+  /* the real vector artwork, scaled to fill the screen exactly (no cropping) */
+  .poster-art{
+    display:block;
+    width:100%;
+    height:100dvh;
+    object-fit:cover;               /* fill the screen; only the orange side-margin is trimmed */
+    object-position:center;
+  }
+  /* on wide/short screens contain avoids over-cropping the poster */
+  @media (min-aspect-ratio:3/4){
+    .poster-art{ object-fit:contain; }
   }
   .card{
     position:relative;
@@ -187,22 +200,26 @@
   .footer-pill b{ font-weight:600; }
   .footer-pill .divider-v{ opacity:.6; margin:0 8px; font-weight:300; }
 
-  /* swipe-up hint — floats in the orange band below the card */
+  /* swipe-up affordance — a soft floating chevron button at the very bottom */
   .hint{
     position:absolute;
-    left:50%; bottom:calc(9px + env(safe-area-inset-bottom));
-    transform:translateX(-50%);
-    display:flex; flex-direction:column-reverse; align-items:center; gap:2px;
-    color:var(--cream);
-    font-size:10.5px; letter-spacing:.28em; text-transform:uppercase;
-    font-weight:600;
-    opacity:.95;
+    right:16px; bottom:calc(16px + env(safe-area-inset-bottom));
+    width:38px; height:38px;
+    display:flex; align-items:center; justify-content:center;
+    color:#fff;
+    background:rgba(224,123,69,.55);
+    border:1px solid rgba(255,255,255,.55);
+    border-radius:50%;
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+    box-shadow:0 6px 16px -6px rgba(60,28,8,.5);
     animation:floaty 1.9s ease-in-out infinite;
     pointer-events:none;
     z-index:5;
   }
+  .hint span{ display:none; }              /* text label removed to keep the mark clean */
   .hint svg{ width:18px; height:18px; }
-  @keyframes floaty{ 0%,100%{ transform:translate(-50%,0);} 50%{ transform:translate(-50%,-5px);} }
+  @keyframes floaty{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-6px);} }
 
   /* ---------- CTA PANEL ---------- */
   .cta{
@@ -342,54 +359,10 @@
 <body>
 <div class="shell" id="shell">
 
-  <!-- ============ POSTER ============ -->
+  <!-- ============ POSTER (exact vector artwork from the GRC/KIADB .ai) ============ -->
   <section class="panel poster" id="poster">
-    <div class="card">
-      <h1 class="headline">An Exclusive Preview<br />for a Chosen Few</h1>
-      <div class="rule"></div>
-      <p class="sub">Invest in North Bangalore's most promising project, ahead of everyone else.</p>
-
-      <!-- big Wright flyer silhouette -->
-      <svg class="plane-big" viewBox="0 0 400 300" fill="none" aria-hidden="true">
-        <g fill="currentColor">
-          <!-- upper wing -->
-          <path d="M40 176 L360 96 C368 94 372 100 366 106 L52 196 C44 199 36 191 40 176 Z"/>
-          <!-- lower wing -->
-          <path d="M52 236 L372 156 C380 154 384 160 378 166 L64 256 C56 259 48 251 52 236 Z"/>
-          <!-- struts -->
-          <rect x="120" y="150" width="3" height="70" transform="rotate(-14 120 150)"/>
-          <rect x="180" y="134" width="3" height="70" transform="rotate(-14 180 134)"/>
-          <rect x="240" y="118" width="3" height="70" transform="rotate(-14 240 118)"/>
-          <rect x="300" y="102" width="3" height="70" transform="rotate(-14 300 102)"/>
-          <!-- diagonal bracing lines -->
-          <path d="M124 156 L182 198 M184 140 L242 182 M244 124 L302 166" stroke="currentColor" stroke-width="2"/>
-          <!-- rudder / tail box -->
-          <path d="M330 210 L360 202 L360 250 L330 258 Z" opacity=".92"/>
-          <rect x="326" y="212" width="2.5" height="46"/>
-          <rect x="358" y="203" width="2.5" height="46"/>
-        </g>
-      </svg>
-
-      <div class="codename">CODE NAME</div>
-      <!-- small mark -->
-      <svg class="mark" viewBox="0 0 120 70" fill="currentColor" aria-hidden="true">
-        <path d="M8 30 L112 12 C116 11 118 15 114 18 L14 42 C10 43 6 37 8 30 Z"/>
-        <path d="M14 52 L118 34 C122 33 124 37 120 40 L22 62 C18 63 14 57 14 52 Z"/>
-        <rect x="46" y="26" width="2.6" height="24" transform="rotate(-10 46 26)"/>
-        <rect x="72" y="21" width="2.6" height="24" transform="rotate(-10 72 21)"/>
-      </svg>
-
-      <div class="brand">The<br />Wright<br />Place</div>
-      <div class="tagline">Luxury in the North</div>
-
-      <div class="divider"></div>
-      <div class="stats">
-        <div class="row"><span class="num">800+</span><span class="txt">units right inside the</span></div>
-        <div class="row"><span class="num">3000+</span><span class="txt">Acre KIADB Aerospace Park</span></div>
-      </div>
-
-      <div class="footer-pill"><b>Fairlark</b><span class="divider-v">|</span><b>GRC</b></div>
-    </div>
+    <img class="poster-art" src="hero.svg"
+         alt="An Exclusive Preview for a Chosen Few — The Wright Place, Luxury in the North. 800+ homes right inside the 3000+ acre KIADB Aerospace & IT Park. Fairlark | GRC." />
 
     <div class="hint" id="hint">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
